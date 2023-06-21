@@ -1,0 +1,9 @@
+services:
+  web:
+    build: 
+      dockerfile: dockerfile-fastapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - ".:${CWD:-/code}"
+    
