@@ -345,10 +345,7 @@
   position: absolute;
   top: 208px;
   left: 162px;
-  border-radius: 10px;
-  background-color: var(--color-darkslategray);
-  border: 5px solid var(--color-white);
-  box-sizing: border-box;
+  
   width: 1196px;
   height: 482px;
   font-size: 64px;

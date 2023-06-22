@@ -18,30 +18,38 @@
       href="https://fonts.googleapis.com/css2?family=Lozdolls FontDEMO:wght@400&display=swap"
     />
   </head>
+  <script>
+    // Function to get today's date
+    function getTodayDate() {
+        var today = new Date();
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var year = today.getFullYear();
+        var formattedDate = day + '-' + month + '-' + year;
+        return formattedDate;
+    }
+
+    // Update the HTML element with today's date
+    function updateDate() {
+        var dateElement = document.getElementById('today-date');
+        dateElement.innerHTML = getTodayDate();
+    }
+</script>
   <body>
     <div class="landing-page">
       <div class="inforamation">
-        <div class="attendees-csv">
-          <img
-            class="whatsapp-image-2023-06-16-at-2"
-            alt=""
-            src="static/public/whatsapp-image-20230616-at-2319-1@2x.png"
-          />
+        <form action="/upload_video" method="post" enctype="multipart/form-data">
+          <input type="file" name="video_file"><br><br>
+          <input type="submit" value="Upload">
+       </form>
+       <div>{{b}}</div>
+        
+       <div class="photos-of-attendees" style = "overflow: auto;">
 
-          <div class="attendees-csv-inner">
-            <div class="line-parent">
-              <div class="frame-child"></div>
-              <div class="frame-child"></div>
-              <div class="frame-child"></div>
-            </div>
+        {% for i in images%}
+        <img id = "id" name = "image" src="https://storage.googleapis.com/emp_png/{{i}}" alt="Image" style="width: 230px; height: auto; margin: 10px;">
+        {% endfor %}
           </div>
-        </div>
-        <div class="photos-of-attendees" style = "overflow: auto;">
-
-          {% for i in images%}
-          <img id = "id" name = "image" src="https://storage.googleapis.com/emp_png/{{i}}" alt="Image" style="width: 230px; height: auto; margin: 10px;">
-          {% endfor %}
-        </div>
           <div class="photos-of-attendees-inner">
             <div class="line-parent">
               <div class="frame-child"></div>
@@ -49,8 +57,13 @@
               <div class="frame-child"></div>
             </div>
           </div>
+        </div>
         <div class="datepicker">
-          <input type="date" id="calender" name="calender" >
+          
+          <div id="today-date"></div>
+          <script>
+              updateDate();
+          </script>
         </div>
         <div class="attendance-of">Attendance of</div>
       </div>
@@ -127,36 +140,10 @@
             src="static/public/account-circle.svg"
           />
         </div>
-        <style>
-          .carousel-item img {
-            width: 100%;
-            height: auto;
-          }
-        </style>
-        
-        <div class="photos-of-attendees">
-          <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              {% for i in images %}
-              <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
-                <img src="https://storage.googleapis.com/emp_png/{{ i }}" alt="Image">
-              </div>
-              {% endfor %}
-            </div>
+        <div class="curosel-here-wrapper">
+          <img src="https://cdn.sanity.io/images/4y5gb0f2/production/99ce546807fcf13b7a8dca6621510b136e41c79c-600x338.gif" alt="Image Description" style = "height: 400px; width: 1196px; object-fit: cover; position: absolute;">
           </div>
         </div>
-        
-        <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            var carousel = document.querySelector('#carouselExample');
-            var carouselInstance = new bootstrap.Carousel(carousel, {
-              interval: 500, // Set the interval in milliseconds (3 seconds in this example)
-              ride: true,
-              wrap: true
-            });
-          });
-        </script>
-        
       </div>
     </div>
   </body>
