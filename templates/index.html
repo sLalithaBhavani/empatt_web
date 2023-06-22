@@ -36,9 +36,10 @@
             </div>
           </div>
         </div>
-        <div class="photos-of-attendees">
+        <div class="photos-of-attendees" style = "overflow: auto;">
+
           {% for i in images%}
-          <img id = "id" name = "image" src="{{i}}" alt="Image"/>
+          <img id = "id" name = "image" src="https://storage.googleapis.com/emp_png/{{i}}" alt="Image" style="width: 230px; height: auto; margin: 10px;">
           {% endfor %}
         </div>
           <div class="photos-of-attendees-inner">
@@ -126,9 +127,36 @@
             src="static/public/account-circle.svg"
           />
         </div>
-        <div class="curosel-here-wrapper">
-          <div class="curosel-here"># curosel here</div>
+        <style>
+          .carousel-item img {
+            width: 100%;
+            height: auto;
+          }
+        </style>
+        
+        <div class="photos-of-attendees">
+          <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              {% for i in images %}
+              <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+                <img src="https://storage.googleapis.com/emp_png/{{ i }}" alt="Image">
+              </div>
+              {% endfor %}
+            </div>
+          </div>
         </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            var carousel = document.querySelector('#carouselExample');
+            var carouselInstance = new bootstrap.Carousel(carousel, {
+              interval: 500, // Set the interval in milliseconds (3 seconds in this example)
+              ride: true,
+              wrap: true
+            });
+          });
+        </script>
+        
       </div>
     </div>
   </body>

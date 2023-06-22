@@ -10,7 +10,7 @@ def download_blob(bucket_name, source_file_name, dest_filename):
   storage_client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json")
   bucket = storage_client.get_bucket(bucket_name)
   blob = bucket.blob(source_file_name)
-  return blob
+  return blob.name
   #f = open(dest_filename,'wb')
   #blob.download_to_file(f)
 

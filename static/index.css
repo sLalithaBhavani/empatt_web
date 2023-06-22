@@ -50,12 +50,14 @@
   height: 570px;
 }
 .manoj-removebg-preview-2-2 {
+  overflow: auto;
   position: relative;
   width: 149px;
   height: 131px;
   object-fit: cover;
 }
 .manoj-removebg-preview-2-2-parent {
+  overflow: auto;  
   position: absolute;
   top: 47px;
   left: 89px;
@@ -66,6 +68,7 @@
   gap: var(--gap-17xl);
 }
 .manoj-removebg-preview-2-2-group {
+  overflow: auto;
   top: 375px;
   left: 89px;
   gap: var(--gap-17xl);
@@ -73,6 +76,7 @@
 .manoj-removebg-preview-2-2-container,
 .manoj-removebg-preview-2-2-group,
 .photos-of-attendees-inner {
+  overflow: auto;
   position: absolute;
   display: flex;
   flex-direction: row;
@@ -80,11 +84,13 @@
   justify-content: flex-start;
 }
 .manoj-removebg-preview-2-2-container {
+  overflow: auto;
   top: 211px;
   left: 89px;
   gap: var(--gap-17xl);
 }
 .photos-of-attendees-inner {
+  overflow: auto;
   top: 217px;
   left: 661px;
   border-radius: var(--br-11xl);
@@ -95,6 +101,7 @@
   box-sizing: border-box;
 }
 .photos-of-attendees {
+  overflow: auto;
   position: absolute;
   top: 138px;
   left: 705px;

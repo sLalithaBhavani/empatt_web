@@ -9,7 +9,7 @@ from google.oauth2 import service_account
 from code import download_blob
 from conv import conve
 
-bucket_name = 'emp_attendance_monitoring_processed'
+bucket_name = 'emp_png'
 client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json")
 bucket = client.get_bucket(bucket_name)
 
@@ -32,7 +32,6 @@ def list_images(bucket_name):
     images = []
     for blob in blobs:
         image_path = download_blob(bucket_name, blob.name, blob.name)
-        conve(image_path)
         images.append(image_path)
     return images
 
