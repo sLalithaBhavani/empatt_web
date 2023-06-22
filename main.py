@@ -229,18 +229,19 @@ def recognize_faces(frames):
                 top, right, bottom, left = face_location
                 cv2.rectangle(resized_frame, (left, top), (right, bottom), (0, 255, 0), 2)
                 cv2.putText(resized_frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-
+ 
         # Save the resulting frame as an image
         output_path = f'results/frame_{i}.jpg'
         cv2.imwrite(output_path, resized_frame) 
         html_table = "<table>\n"
+        html_table += "<tr><th colspan='2'>Attendance</th></tr>\n"
         html_table += "<tr><th>Name</th><th>Date and Time</th></tr>\n"
-
+        html_table += "</thead>\n" 
         for name, date in attendance_dict.items():
             html_table += f"<tr><td>{name}</td><td>{date}</td></tr>\n"
  
         html_table += "</table>"   
-    return html_table
+    return html_table   
    
   
 

@@ -13,6 +13,15 @@
 	<title>EAMS</title>
 
 </head>
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid white;
+        padding: 8px;
+    }
+</style>
 <body class="has-loading-screen ts-theme-dark">
 
     <!--*************************************************************************************************************-->
@@ -54,15 +63,19 @@
                                 <input type="submit" class="btn btn-primary" value="Upload">
                               </form> 
                         </div>
-                        <div>{{b | safe}}</div>
+                       
                         <!--end col-md-6-->
                         <!--Count Down-->
                         
                         </div>
+                        <br><br><br>
+                        
+                        <div>{{b | safe}}</div>
                         <!--end col-md-6-->
                     </div>
                     <!--end row-->
                 </div> 
+                
                 <!--end ts-content-wrapper-->
             </main>
             <!--end #main-content--> 
