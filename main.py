@@ -37,7 +37,7 @@ import os
 
 
 bucket_name = 'emp_png'
-client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json")
+client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json") 
 bucket = client.get_bucket(bucket_name)
 
 
@@ -62,7 +62,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-@app.get('/')
+@app.get('/')  
 def index(request : Request):
     context={"request" : request,
              "predictedtopic":"No Video"}
@@ -70,31 +70,31 @@ def index(request : Request):
 
 @app.get("/main", response_class=HTMLResponse)
 def lis( request : Request):
-    images = list_images(bucket_name)
+    images = list_images(bucket_name)  
     print(images)
     context = {"request": request, "images": images}
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse("index.html", context)    
 
 @app.post("/upload_video", response_class=HTMLResponse)
 async def upload_video(request : Request, video_file: UploadFile = File(...)):
     video_path = f"videos/{video_file.filename}"
     with open(video_path,"wb") as f:
         f.write(await video_file.read())
-
+ 
 
 
     a=extract_frames(video_path)
     b=recognize_faces(a)
     #c=process_attendance_data(b)
     context = {
-        "request": request,
+        "request": request, 
         "video_path": video_path,
-        "b":b
+        "b": b
     }
     return templates.TemplateResponse("index.html",context)
 
 
-
+   
 
 
 
@@ -232,7 +232,7 @@ def recognize_faces(frames):
 
         # Save the resulting frame as an image
         output_path = f'results/frame_{i}.jpg'
-        cv2.imwrite(output_path, resized_frame)
+        cv2.imwrite(output_path, resized_frame) 
     return attendance_dict
 
 
