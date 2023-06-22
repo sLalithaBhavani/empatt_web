@@ -52,9 +52,9 @@
                             <form action="/upload_video" method="post"  enctype="multipart/form-data">
                                 <input type="file" name="video_file" class="btn btn-primary"><br><br>
                                 <input type="submit" class="btn btn-primary" value="Upload">
-                              </form>
-                            <div>{{b}}</div>
+                              </form> 
                         </div>
+                        <div>{{b | safe}}</div>
                         <!--end col-md-6-->
                         <!--Count Down-->
                         
@@ -62,10 +62,10 @@
                         <!--end col-md-6-->
                     </div>
                     <!--end row-->
-                </div>
+                </div> 
                 <!--end ts-content-wrapper-->
             </main>
-            <!--end #main-content-->
+            <!--end #main-content--> 
 
             <!--FOOTER **********************************************************************************************-->
             <footer id="footer">

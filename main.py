@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Annotated
 from datetime import date, datetime
-
+import json
 import cv2
 import face_recognition
 import os
@@ -37,7 +37,7 @@ import os
 
 
 bucket_name = 'emp_png'
-client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json") 
+client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json")  
 bucket = client.get_bucket(bucket_name)
 
 
@@ -66,7 +66,7 @@ templates = Jinja2Templates(directory="templates")
 def index(request : Request):
     context={"request" : request,
              "predictedtopic":"No Video"}
-    return templates.TemplateResponse("index.html",context)
+    return templates.TemplateResponse("index.html",context) 
 
 @app.get("/main", response_class=HTMLResponse)
 def lis( request : Request):
@@ -83,7 +83,7 @@ async def upload_video(request : Request, video_file: UploadFile = File(...)):
  
 
 
-    a=extract_frames(video_path)
+    a=extract_frames(video_path)   
     b=recognize_faces(a)
     #c=process_attendance_data(b)
     context = {
@@ -233,9 +233,16 @@ def recognize_faces(frames):
         # Save the resulting frame as an image
         output_path = f'results/frame_{i}.jpg'
         cv2.imwrite(output_path, resized_frame) 
-    return attendance_dict
+        html_table = "<table>\n"
+        html_table += "<tr><th>Name</th><th>Date and Time</th></tr>\n"
 
-
+        for name, date in attendance_dict.items():
+            html_table += f"<tr><td>{name}</td><td>{date}</td></tr>\n"
+ 
+        html_table += "</table>"   
+    return html_table
+   
+  
 
 # def process_attendance_data(attendance_dict):
 #     # Convert the att endance dictionary to a DataFrame
