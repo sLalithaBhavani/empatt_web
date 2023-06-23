@@ -265,3 +265,8 @@ def recognize_faces(frames):
 #     output_file = f'Attendance_{current_datetime}.csv'
 #     df.to_csv(output_file, index=True)
 #     return output_file
+
+
+
+
+ 
