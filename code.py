@@ -12,5 +12,5 @@ def download_blob(bucket_name, source_file_name, dest_filename):
   blob = bucket.blob(source_file_name)
   return blob.name
   #f = open(dest_filename,'wb')
-  #blob.download_to_file(f)
+  #blob.download_to_file(f) 
 

@@ -51,11 +51,11 @@ def list_images(bucket_name):
         image_path = download_blob(bucket_name, blob.name, blob.name)
         images.append(image_path)
     return images
-# key_path = "cloudkarya-internship-771681dff37f.json"
+key_path = "cloudkarya-internship-771681dff37f.json"
 # bigquery_client = bigquery.Client.from_service_account_json(key_path)
 # storage_client = storage.Client.from_service_account_json(key_path)
 
-# project_id = "cloudkarya-internship"
+project_id = "cloudkarya-internship"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -75,11 +75,13 @@ def lis( request : Request):
     context = {"request": request, "images": images}
     return templates.TemplateResponse("index.html", context)    
 
-@app.post("/upload_video", response_class=HTMLResponse)
-async def upload_video(request : Request, video_file: UploadFile = File(...)):
-    video_path = f"videos/{video_file.filename}"
-    with open(video_path,"wb") as f:
-        f.write(await video_file.read())
+# @app.post("/upload_video", response_class=HTMLResponse)
+# async def upload_video(request : Request, video_file: UploadFile = File(...)):
+#     video_path = f"videos/{video_file.filename}"
+#     with open(video_path,"wb") as f:
+#         f.write(await video_file.read())
+
+
  
 
 
@@ -244,9 +246,20 @@ def recognize_faces(frames):
             html_table += f"<tr><td>{name}</td><td>{date_str}</td><td>{time_str}</td></tr>\n"
   
         html_table += "</table>"   
-    return html_table   
-   
+    return html_table 
   
+# @app.post("/upload_video", response_class=HTMLResponse)
+# async def upload_video(request : Request, video_file: UploadFile = File(...)):
+#     video_path = f"videos/{video_file.filename}"
+#     with open(video_path,"wb") as f:
+#         f.write(await video_file.read())
+
+@app.get("/action_page", response_class=HTMLResponse)
+async def get_data(request: Request,date:Annotated[str,Form(...)]):
+   query = f"""
+         SELECT  * FROM {project_id}.eams1.ImageDataTable
+         WHERE date ='{date}';
+   """ 
 
 # def process_attendance_data(attendance_dict):
 #     # Convert the att endance dictionary to a DataFrame
