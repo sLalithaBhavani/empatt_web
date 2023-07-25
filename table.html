@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Attendance</th>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>EntryExit</th>
+                </tr>
+        </thead>
+        <tbody>
+            {% for row in attendance_df %}
+                <tr>
+                    <td>{{ row['Name'] }}</td>
+                    <td>{{ row['Date'] }}</td>
+                    <td>{{ row['Time'] }}</td>
+                    <td>{{ row['EntryExit'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -62,12 +62,12 @@
                             <!-- <form action="/upload_video" method="post"  enctype="multipart/form-data">
                                 <input type="file" name="video_file" class="btn btn-primary"><br><br>
                                 <input type="submit" class="btn btn-primary" value="Upload">
-                              </form>  -->
-                              <form action="/action_page" method="get">
-                                <label for="Choose Date">Choose Date:</label>
-                                <input type="date" id="Choose Date" name="Choose Date">
+                            </form>  -->
+                            <form action="/action_page" method="get">
+                                <label for="choose_date">Choose Date:</label>
+                                <input type="date" id="choose_date" name="choose_date" placeholder="{{ chosen_date }}">
                                 <input type="submit">
-                              </form>
+                            </form>
                         </div>
                        
                         <!--end col-md-6-->
@@ -77,6 +77,32 @@
                         <br><br><br>
                         
                         <div>{{b | safe}}</div>
+                        <!-- Get from bigQ -->
+                        {% if attendance_df %}
+                        <div style="margin-top: 30px ;">
+                            <table>
+                                <thead> 
+                                    <h2>Attendance</h2>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>EntryExit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in attendance_df %}
+                                        <tr>
+                                            <td>{{ row['Name'] }}</td>
+                                            <td>{{ row['Date'] }}</td>
+                                            <td>{{ row['Time'] }}</td>
+                                            <td>{{ row['EntryExit'] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
                         <!--end col-md-6-->
                     </div>
                     <div id="carouselExample" class="carousel slide">
@@ -189,3 +215,4 @@
 
 </body>
 </html>
+

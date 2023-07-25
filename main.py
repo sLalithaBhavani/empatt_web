@@ -1,9 +1,7 @@
-from fastapi import FastAPI, UploadFile, File, Request,Form
+from fastapi import FastAPI, UploadFile, File, Request,Form, Query
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import base64
-from fastapi import FastAPI, UploadFile, File
-from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Annotated
 from datetime import date, datetime
@@ -11,11 +9,9 @@ import json
 import cv2
 import face_recognition
 import os
-import numpy as np
 from matplotlib import pyplot as plt
 from google.cloud import storage
 import cv2
-
 
 import tensorflow as tf
 from tensorflow import keras
@@ -26,20 +22,23 @@ import pandas as pd
 import pickle
 # import matplotlib.pyplot as plt
 from code import download_blob
-import json
-from google.cloud import bigquery, storage
+from google.cloud import bigquery
 from google.oauth2 import service_account
 
 from fastapi.responses import HTMLResponse
-import pandas as pd
-import os
 
 
 
 bucket_name = 'emp_png'
-client = storage.Client.from_service_account_json("cloudkarya-internship-415b6b4ef0ff.json")  
+key_path = "cloudkarya-internship-415b6b4ef0ff.json"
+client = storage.Client.from_service_account_json(key_path)  
 bucket = client.get_bucket(bucket_name)
-
+bigquery_client = bigquery.Client.from_service_account_json(key_path)
+storage_client = storage.Client.from_service_account_json(key_path)
+project_id = "cloudkarya-internship"  
+# bigquery_client = bigquery.Client.from_service_account_json(client)
+# storage_client = storage.Client.from_service_account_json(client)
+# project_id = "cloudkarya-internship"
 
 def extract(request: Request):
     download_blob(bucket_name, source_file_name, dest_filename)
@@ -51,11 +50,7 @@ def list_images(bucket_name):
         image_path = download_blob(bucket_name, blob.name, blob.name)
         images.append(image_path)
     return images
-key_path = "cloudkarya-internship-771681dff37f.json"
-# bigquery_client = bigquery.Client.from_service_account_json(key_path)
-# storage_client = storage.Client.from_service_account_json(key_path)
 
-project_id = "cloudkarya-internship"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -80,11 +75,7 @@ def lis( request : Request):
 #     video_path = f"videos/{video_file.filename}"
 #     with open(video_path,"wb") as f:
 #         f.write(await video_file.read())
-
-
  
-
-
     a=extract_frames(video_path)   
     b=recognize_faces(a)
     #c=process_attendance_data(b)
@@ -94,13 +85,6 @@ def lis( request : Request):
         "b": b
     }
     return templates.TemplateResponse("index.html",context)
-
-
-   
-
-
-
-   
 
 
 # def download_blob(bucket_name, source_file_name, dest_filename,storage_client):
@@ -154,7 +138,6 @@ from tempfile import TemporaryFile
 
 #     print(f"Processing file: {file_name}.")
 
-
 #     storage_client = storage.Client()
 
 #     source_bucket = storage_client.bucket("emp_attendance_monitoring_raw")
@@ -179,7 +162,6 @@ from tempfile import TemporaryFile
 #         frame_counter += 1
 #         print('Frames sent')
 # process_file()
-
 
 
 def recognize_faces(frames):
@@ -219,19 +201,23 @@ def recognize_faces(frames):
 
             # Find the best match
             if len(matches) > 0:
-                face_distances = face_recognition.face_distance(known_faces, face_encoding)
-                best_match_index = np.argmin(face_distances)
-                if matches[best_match_index]:
-                    name = known_names[best_match_index]
+              face_distances = face_recognition.face_distance(known_faces, face_encoding)
+              best_match_index = np.argmin(face_distances)
+              if matches[best_match_index]:
+                  name = known_names[best_match_index]
+                  # Update attendance dictionary with name and timestamp
+                  # attendance_dict[name] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                    # Update attendance dictionary with name and timestamp
-                    attendance_dict[name] = datetime.now().strftime("%Y-%B-%Y %H:%M:%S")
-
-                # Draw a box around the face and label the name
-                top, right, bottom, left = face_location
-                cv2.rectangle(resized_frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                cv2.putText(resized_frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
- 
+              # Draw a box around the face and label the name
+              if face_locations:
+                timestamp = cap.get(round(cv2.CAP_PROP_POS_MSEC,2)) / 1000.0
+                adjusted_timestamp = video_created_time + datetime.timedelta(seconds=timestamp)
+                attendance_dict[name] = adjusted_timestamp.strftime("%Y-%B-%d %H:%M:%S")
+              top, right, bottom, left = face_location
+              cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+              cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+              cv2.putText(frame, str(adjusted_timestamp.strftime("%Y-%B-%d %H:%M:%S")), (left, bottom + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+  
         # Save the resulting frame as an image
         output_path = f'results/frame_{i}.jpg'
         cv2.imwrite(output_path, resized_frame) 
@@ -246,20 +232,21 @@ def recognize_faces(frames):
             html_table += f"<tr><td>{name}</td><td>{date_str}</td><td>{time_str}</td></tr>\n"
   
         html_table += "</table>"   
-    return html_table 
-  
-# @app.post("/upload_video", response_class=HTMLResponse)
-# async def upload_video(request : Request, video_file: UploadFile = File(...)):
-#     video_path = f"videos/{video_file.filename}"
-#     with open(video_path,"wb") as f:
-#         f.write(await video_file.read())
-
-@app.get("/action_page", response_class=HTMLResponse)
-async def get_data(request: Request,date:Annotated[str,Form(...)]):
-   query = f"""
+    return html_table      
+      
+@app.get("/action_page") 
+async def get_data(request: Request, choose_date : str):
+    global project_id
+    query = f"""
          SELECT  * FROM {project_id}.eams1.ImageDataTable
-         WHERE date ='{date}';
-   """ 
+         WHERE date ='{choose_date}';"""
+    df = bigquery_client.query(query).to_dataframe()
+    df = df.to_dict(orient='records')
+    return templates.TemplateResponse('index.html', context={"request": request ,"attendance_df" : df, "chosen_date" : choose_date})
+#     df = bigquery_client.query(query).to_dataframe()
+#     print(df.head())
+#     # image_path=df.iloc[0]['img_file']
+#     predi1=df.iloc[0]['pneumonia_prob']
 
 # def process_attendance_data(attendance_dict):
 #     # Convert the att endance dictionary to a DataFrame
@@ -279,6 +266,19 @@ async def get_data(request: Request,date:Annotated[str,Form(...)]):
 #     df.to_csv(output_file, index=True)
 #     return output_file
 
+# if len(matches) > 0:
+#                 face_distances = face_recognition.face_distance(known_faces, face_encoding)
+#                 best_match_index = np.argmin(face_distances)
+#                 if matches[best_match_index]:
+#                     name = known_names[best_match_index]
+
+#                     # Update attendance dictionary with name and timestamp
+#                     attendance_dict[name] = datetime.now().strftime("%Y-%B-%Y %H:%M:%S")
+
+#                 # Draw a box around the face and label the name
+#                 top, right, bottom, left = face_location
+#                 cv2.rectangle(resized_frame, (left, top), (right, bottom), (0, 255, 0), 2)
+#                 cv2.putText(resized_frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
 
 
